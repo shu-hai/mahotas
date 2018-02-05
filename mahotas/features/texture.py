@@ -261,9 +261,16 @@ def haralick_features(cmats,
             i,j = np.mgrid[:maxv,:maxv]
             ij = i*j
             i_j2_p1 = (i - j)**2
-            i_j2_p1 += 1
+            i_j2_p1 += 1          
             i_j2_p1 = 1. / i_j2_p1
             i_j2_p1 = i_j2_p1.ravel()
+            
+            i_j_abs_p1 = abs(i - j)
+            i_j_abs_p1 += 1          
+            i_j_abs_p1 = 1. / i_j_abs_p1
+            i_j_abs_p1 = i_j_abs_p1.ravel()
+            
+            
             px_plus_y = np.empty(2*maxv, np.double)
             px_minus_y = np.empty(maxv, np.double)
         elif maxv != len(cmat):
@@ -294,7 +301,7 @@ def haralick_features(cmats,
             feats[2] = (1. / sx / sy) * (np.dot(ij.ravel(), pravel) - ux * uy)
 
         feats[3] = vx
-        feats[4] = np.dot(i_j2_p1, pravel)
+        feats[4] = np.dot(i_j_abs_p1, pravel)
         feats[5] = np.dot(tk, px_plus_y)
 
         feats[7] = _entropy(px_plus_y)
@@ -358,12 +365,12 @@ def haralick_features(cmats,
 
     return features
 
-
+# replace "Inverse Difference Moment" by "Homogeneity"
 haralick_labels = ["Angular Second Moment",
                    "Contrast",
                    "Correlation",
                    "Sum of Squares: Variance",
-                   "Inverse Difference Moment",
+                   "Homogeneity",
                    "Sum Average",
                    "Sum Variance",
                    "Sum Entropy",
